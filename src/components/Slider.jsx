@@ -2,11 +2,11 @@ import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { collection, getDocs, query, orderBy, limit } from 'firebase/firestore'
 import { db } from '../firebase.config'
-import SwiperCore, { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
+import SwiperCore, { Navigation, Pagination, Scrollbar, A11y, Autoplay } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 import 'swiper/swiper-bundle.css'
 import Spinner from './Spinner'
-SwiperCore.use([Navigation, Pagination, Scrollbar, A11y])
+SwiperCore.use([Navigation, Pagination, Scrollbar, A11y, Autoplay])
 
 function Slider() {
     const [loading, setLoading] = useState(true)
@@ -42,16 +42,16 @@ function Slider() {
     return listings && (
         <>
             <p className="exploreheading">
-                Recommended
+                <h4>Recommended</h4>
             </p>
 
-            <Swiper slidesPerView={1} pagination={{ clickable: true }}>
+            <Swiper slidesPerView={1} pagination={{ clickable: true }} autoplay={{ delay: 2000 }}>
                 {listings.map(({ data, id }) => (
                     <SwiperSlide key={id} onClick={() => navigate(`/category/${data.type}/${id}`)}>
                         <div style={{background: `url(${data.imageUrls[0]}) center no-repeat`, backgroundSize: 'cover'}} className="swiperSlideDiv">
                             <p className="swiperSlideText">{data.name}</p>
                             <p className="swiperSlidePrice">
-                                ${data.discountedPrice ?? data.regularPrice}{' '}
+                                Rs. {data.discountedPrice ?? data.regularPrice}{' '}
                                 {data.type === 'rent' && '/month'}
                             </p>
                         </div>

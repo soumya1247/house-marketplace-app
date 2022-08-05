@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { getAuth, onAuthStateChanged } from 'firebase/auth'
 import { getStorage, ref, uploadBytesResumable, getDownloadURL } from 'firebase/storage'
-import { addDoc, collection, serverTimestamp} from 'firebase/firestore'
+import { addDoc, collection, serverTimestamp } from 'firebase/firestore'
 import { db } from '../firebase.config'
 import { useNavigate } from 'react-router-dom'
 import { toast } from 'react-toastify'
@@ -62,6 +62,8 @@ function CreateListing() {
         return () => {
             isMounted.current = false
         }
+        //FormData is required to be added according to warning in console.But adding formData in dependency array will cause an infinite loop
+        // eslint-disable-next-line react-hooks/exhaustive-deps 
     }, [isMounted])
 
     const onSubmit = async (e) => {
@@ -116,7 +118,7 @@ function CreateListing() {
 
                 uploadTask.on('state_changed',
                     (snapshot) => {
-                    
+
                         const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
                         console.log('Upload is ' + progress + '% done');
                         switch (snapshot.state) {
@@ -132,7 +134,7 @@ function CreateListing() {
                         reject(error)
                     },
                     () => {
-                        
+
                         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
                             resolve(downloadURL);
                         });
@@ -153,7 +155,7 @@ function CreateListing() {
             ...formData,
             imageUrls,
             geolocation,
-            timestamp: serverTimestamp() 
+            timestamp: serverTimestamp()
         }
 
         delete formDataCopy.images
@@ -336,6 +338,7 @@ function CreateListing() {
 
                     {!geoLocationEnabled && (
                         <div className='formLatLng flex'>
+                            
                             <div>
                                 <label className='formLabel'>Latitude</label>
                                 <input
@@ -397,7 +400,7 @@ function CreateListing() {
                             max='750000000'
                             required
                         />
-                        {type === 'rent' && <p className='formPriceText'>$ / Month</p>}
+                        {type === 'rent' && <p className='formPriceText'>Rs. / Month</p>}
                     </div>
 
                     {offer && (
@@ -418,7 +421,7 @@ function CreateListing() {
 
                     <label className='formLabel'>Images</label>
                     <p className='imagesInfo'>
-                        The first image will be the cover (max 6).
+                        The First image will be the Cover (max 6).
                     </p>
                     <input
                         className='formInputFile'
